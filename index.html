@@ -1,0 +1,1421 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расширенный план изучения Библии</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            height: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #27ae60;
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .setup-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .setup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .setup-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .setup-item h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .controls {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tag-search {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        #tagSearchInput {
+            width: 200px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn.active {
+            background: #27ae60;
+            transform: scale(1.05);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tag-cloud-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag-cloud .tag {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .tag-cloud .tag:hover {
+            transform: scale(1.1);
+        }
+
+        .testament-section {
+            margin-bottom: 40px;
+        }
+
+        .testament-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .reading-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .reading-card {
+            background: #fff;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reading-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .reading-card.completed {
+            background: #d4edda;
+            border-color: #27ae60;
+        }
+
+        .reading-card.overdue {
+            border-color: #e74c3c;
+            background: #fadbd8;
+        }
+
+        .reading-card.completed::before {
+            content: "✓";
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #27ae60;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .reading-card.overdue::after {
+            content: "!";
+            position: absolute;
+            top: 15px;
+            right: 50px;
+            background: #e74c3c;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .day-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .day-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .day-date {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .reading-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .reading-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #3498db;
+            border-radius: 4px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .custom-checkbox.checked {
+            background: #27ae60;
+            border-color: #27ae60;
+        }
+
+        .custom-checkbox.checked::after {
+            content: "✓";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .youversion-link {
+            background: #f39c12;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .youversion-link:hover {
+            background: #e67e22;
+        }
+
+        .notes-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .tags-section {
+            margin-top: 10px;
+        }
+
+        .tags-input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .tags-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        .tag {
+            background: #3498db;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            position: relative;
+            padding-right: 20px;
+        }
+
+        .tag.faith {
+            background: #9b59b6;
+        }
+        .tag.love {
+            background: #e74c3c;
+        }
+        .tag.hope {
+            background: #f39c12;
+        }
+        .tag.salvation {
+            background: #27ae60;
+        }
+        .tag.sin {
+            background: #34495e;
+        }
+        .tag.prayer {
+            background: #3498db;
+        }
+
+        .remove-tag {
+            position: absolute;
+            right: 5px;
+            cursor: pointer;
+        }
+
+        .remove-tag:hover {
+            color: #ffdddd;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .today-highlight {
+            border: 3px solid #f39c12;
+            box-shadow: 0 0 20px rgba(243, 156, 18, 0.3);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #27ae60;
+        }
+
+        .notification.warning {
+            background: #f39c12;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .tag-search {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            #tagSearchInput {
+                width: 100%;
+            }
+
+            .view-toggle {
+                justify-content: center;
+            }
+
+            .reading-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .setup-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 Расширенный план изучения Библии</h1>
+            <p>Персонализированное изучение Священного Писания</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="setup-section">
+            <div class="setup-grid">
+                <div class="setup-item">
+                    <h3>📅 Настройка плана</h3>
+                    <div class="form-group">
+                        <label for="startDate">Дата начала:</label>
+                        <input type="date" id="startDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="planType">Тип плана:</label>
+                        <select id="planType" class="form-control">
+                            <option value="year">За год (365 дней)</option>
+                            <option value="halfYear">За полгода (183 дня)</option>
+                            <option value="chronological">Хронологический</option>
+                            <option value="thematic">Тематический</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="updatePlan()">Обновить план</button>
+                </div>
+
+                <div class="setup-item">
+                    <h3>🔔 Напоминания</h3>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="enableNotifications"> Включить напоминания
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="reminderTime">Время напоминания:</label>
+                        <input type="time" id="reminderTime" class="form-control" value="09:00">
+                    </div>
+                    <button class="btn btn-success" onclick="setupReminders()">Настроить</button>
+                </div>
+
+                <div class="setup-item">
+                    <h3>📊 Статистика</h3>
+                    <p><strong>Пропущено дней:</strong> <span id="missedDays">0</span></p>
+                    <p><strong>Длительность изучения:</strong> <span id="studyDuration">0 дней</span></p>
+                    <p><strong>Средний темп:</strong> <span id="averagePace">0%</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="view-toggle">
+                <button class="btn btn-primary active" onclick="showView('all')">Все дни</button>
+                <button class="btn btn-secondary" onclick="showView('today')">Сегодня</button>
+                <button class="btn btn-secondary" onclick="showView('week')">Неделя</button>
+                <button class="btn btn-secondary" onclick="showView('overdue')">Пропущенные</button>
+            </div>
+            <div class="tag-search">
+                <input type="text" id="tagSearchInput" placeholder="Поиск по тегам..." class="form-control">
+                <button class="btn btn-primary" onclick="searchByTag()">Найти</button>
+                <button class="btn btn-secondary" onclick="resetSearch()">Сбросить</button>
+            </div>
+            <div>
+                <button class="btn btn-danger" onclick="clearAllData()">Очистить все</button>
+                <button class="btn btn-secondary" onclick="resetProgress()">Сбросить прогресс</button>
+                <button class="btn btn-warning" onclick="exportNotes()">Экспорт заметок</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="tag-cloud-section">
+                <h3>Облако тегов</h3>
+                <div class="tag-cloud" id="tagCloud"></div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalDays">365</div>
+                    <div class="stat-label">Всего дней</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedDays">0</div>
+                    <div class="stat-label">Завершено</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="progressPercent">0%</div>
+                    <div class="stat-label">Прогресс</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="notesCount">0</div>
+                    <div class="stat-label">Заметок</div>
+                </div>
+            </div>
+
+            <div class="testament-section">
+                <h2 class="testament-title">📜 Ветхий Завет</h2>
+                <div class="reading-grid" id="oldTestament"></div>
+            </div>
+
+            <div class="testament-section">
+                <h2 class="testament-title">✝️ Новый Завет</h2>
+                <div class="reading-grid" id="newTestament"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+// Планы чтения
+const readingPlans = {
+    year: {
+        oldTestament: [
+            { day: 1, text: "Бытие 1-3" },
+            { day: 2, text: "Бытие 4-7" },
+            { day: 3, text: "Бытие 8-11" },
+            { day: 4, text: "Бытие 12-15" },
+            { day: 5, text: "Бытие 16-19" },
+            { day: 6, text: "Бытие 20-23" },
+            { day: 7, text: "Бытие 24-27" },
+            { day: 8, text: "Бытие 28-31" },
+            { day: 9, text: "Бытие 32-35" },
+            { day: 10, text: "Бытие 36-39" },
+            { day: 11, text: "Бытие 40-43" },
+            { day: 12, text: "Бытие 44-47" },
+            { day: 13, text: "Бытие 48-50" },
+            { day: 14, text: "Исход 1-4" },
+            { day: 15, text: "Исход 5-8" },
+            { day: 16, text: "Исход 9-12" },
+            { day: 17, text: "Исход 13-16" },
+            { day: 18, text: "Исход 17-20" },
+            { day: 19, text: "Исход 21-24" },
+            { day: 20, text: "Исход 25-28" }
+        ],
+        newTestament: [
+            { day: 1, text: "Матфея 1-2" },
+            { day: 2, text: "Матфея 3-4" },
+            { day: 3, text: "Матфея 5-7" },
+            { day: 4, text: "Матфея 8-10" },
+            { day: 5, text: "Матфея 11-13" },
+            { day: 6, text: "Матфея 14-16" },
+            { day: 7, text: "Матфея 17-19" },
+            { day: 8, text: "Матфея 20-22" },
+            { day: 9, text: "Матфея 23-25" },
+            { day: 10, text: "Матфея 26-28" },
+            { day: 11, text: "Марка 1-3" },
+            { day: 12, text: "Марка 4-6" },
+            { day: 13, text: "Марка 7-9" },
+            { day: 14, text: "Марка 10-12" },
+            { day: 15, text: "Марка 13-16" },
+            { day: 16, text: "Луки 1-3" },
+            { day: 17, text: "Луки 4-6" },
+            { day: 18, text: "Луки 7-9" },
+            { day: 19, text: "Луки 10-12" },
+            { day: 20, text: "Луки 13-15" }
+        ]
+    },
+    halfYear: {
+        oldTestament: [
+            { day: 1, text: "Бытие 1-6" },
+            { day: 2, text: "Бытие 7-14" },
+            { day: 3, text: "Бытие 15-22" },
+            { day: 4, text: "Бытие 23-31" },
+            { day: 5, text: "Бытие 32-39" },
+            { day: 6, text: "Бытие 40-50" },
+            { day: 7, text: "Исход 1-8" },
+            { day: 8, text: "Исход 9-16" },
+            { day: 9, text: "Исход 17-24" },
+            { day: 10, text: "Исход 25-32" }
+        ],
+        newTestament: [
+            { day: 1, text: "Матфея 1-4" },
+            { day: 2, text: "Матфея 5-10" },
+            { day: 3, text: "Матфея 11-16" },
+            { day: 4, text: "Матфея 17-22" },
+            { day: 5, text: "Матфея 23-28" },
+            { day: 6, text: "Марка 1-6" },
+            { day: 7, text: "Марка 7-12" },
+            { day: 8, text: "Марка 13-16" },
+            { day: 9, text: "Луки 1-6" },
+            { day: 10, text: "Луки 7-12" }
+        ]
+    },
+    chronological: {
+        oldTestament: [
+            { day: 1, text: "Бытие 1-2 (Сотворение)" },
+            { day: 2, text: "Бытие 3-5 (Грехопадение)" },
+            { day: 3, text: "Бытие 6-9 (Потоп)" },
+            { day: 4, text: "Бытие 10-11 (Вавилон)" },
+            { day: 5, text: "Иов 1-7 (Испытания Иова)" },
+            { day: 6, text: "Иов 8-14" },
+            { day: 7, text: "Иов 15-21" },
+            { day: 8, text: "Иов 22-28" },
+            { day: 9, text: "Иов 29-35" },
+            { day: 10, text: "Иов 36-42" }
+        ],
+        newTestament: [
+            { day: 1, text: "Матфея 1-2 (Рождение Христа)" },
+            { day: 2, text: "Луки 1-2 (Благовещение)" },
+            { day: 3, text: "Матфея 3-4 (Начало служения)" },
+            { day: 4, text: "Иоанна 1-3 (Первые ученики)" },
+            { day: 5, text: "Матфея 5-7 (Нагорная проповедь)" },
+            { day: 6, text: "Матфея 8-10 (Чудеса и ученики)" },
+            { day: 7, text: "Марка 1-3 (Служение в Галилее)" },
+            { day: 8, text: "Марка 4-6 (Притчи и чудеса)" },
+            { day: 9, text: "Луки 7-9 (Учение и исцеления)" },
+            { day: 10, text: "Иоанна 4-6 (Самарянка, хлеб жизни)" }
+        ]
+    },
+    thematic: {
+        oldTestament: [
+            { day: 1, text: "Псалом 1, 23, 90 (Доверие Богу)" },
+            { day: 2, text: "Притчи 1-3 (Мудрость)" },
+            { day: 3, text: "Екклесиаст 3, 12 (Время и вечность)" },
+            { day: 4, text: "Исаия 40, 53, 55 (Мессия)" },
+            { day: 5, text: "Псалмы 42, 46, 84 (Жажда Бога)" },
+            { day: 6, text: "Иеремия 1, 29, 31 (Призвание пророка)" },
+            { day: 7, text: "Иезекииль 34, 36, 37 (Обновление)" },
+            { day: 8, text: "Даниил 1-3 (Верность в испытаниях)" },
+            { day: 9, text: "Осия 1-3, 11 (Любовь Бога)" },
+            { day: 10, text: "Малахия 3-4 (Покаяние)" }
+        ],
+        newTestament: [
+            { day: 1, text: "Матфея 5-7 (Заповеди блаженства)" },
+            { day: 2, text: "Иоанна 3, 10 (Спасение, добрый пастырь)" },
+            { day: 3, text: "Римлянам 8 (Жизнь в Духе)" },
+            { day: 4, text: "1 Коринфянам 13 (Любовь)" },
+            { day: 5, text: "Ефесянам 6 (Духовная брань)" },
+            { day: 6, text: "Филиппийцам 2-4 (Радость в Господе)" },
+            { day: 7, text: "Колоссянам 3 (Новая жизнь)" },
+            { day: 8, text: "Евреям 11 (Вера)" },
+            { day: 9, text: "Иакова 1-2 (Практическая вера)" },
+            { day: 10, text: "1 Петра 1-2 (Надежда)" }
+        ]
+    }
+};
+
+let currentPlan = readingPlans.year;
+let completedReadings = {};
+let notes = {};
+let tags = {};
+let startDate = new Date();
+let currentView = 'all';
+let reminderInterval = null;
+
+// Цвета тегов по умолчанию
+const tagColors = {
+    'вера': 'faith',
+    'любовь': 'love',
+    'надежда': 'hope',
+    'спасение': 'salvation',
+    'грех': 'sin',
+    'молитва': 'prayer',
+    'покаяние': 'salvation',
+    'терпение': 'hope',
+    'мудрость': 'faith',
+    'заповеди': 'prayer'
+};
+
+// Инициализация
+function init() {
+    loadSettings();
+    loadProgress();
+    loadNotes();
+    setupUI();
+    renderReadingPlan();
+    updateStats();
+    updateProgressBar();
+    checkMissedReadings();
+    updateTagCloud();
+}
+
+// Загрузка настроек
+function loadSettings() {
+    try {
+        const savedData = localStorage.getItem('bibleSettings');
+        if (savedData) {
+            const settings = JSON.parse(savedData);
+            startDate = settings.startDate ? new Date(settings.startDate) : new Date();
+            document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
+            
+            const planType = settings.planType || 'year';
+            document.getElementById('planType').value = planType;
+            currentPlan = readingPlans[planType];
+            
+            document.getElementById('enableNotifications').checked = settings.notifications || false;
+            document.getElementById('reminderTime').value = settings.reminderTime || '09:00';
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки настроек:', error);
+    }
+}
+
+// Сохранение настроек
+function saveSettings() {
+    try {
+        const settings = {
+            startDate: startDate.toISOString(),
+            planType: document.getElementById('planType').value,
+            notifications: document.getElementById('enableNotifications').checked,
+            reminderTime: document.getElementById('reminderTime').value
+        };
+        localStorage.setItem('bibleSettings', JSON.stringify(settings));
+    } catch (error) {
+        console.error('Ошибка сохранения настроек:', error);
+    }
+}
+
+// Загрузка прогресса
+function loadProgress() {
+    try {
+        const savedData = localStorage.getItem('bibleProgress');
+        if (savedData) {
+            const progress = JSON.parse(savedData);
+            completedReadings = progress.completedReadings || {};
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки прогресса:', error);
+    }
+}
+
+// Сохранение прогресса
+function saveProgress() {
+    try {
+        const progress = {
+            completedReadings: completedReadings,
+            lastUpdate: new Date().toISOString()
+        };
+        localStorage.setItem('bibleProgress', JSON.stringify(progress));
+    } catch (error) {
+        console.error('Ошибка сохранения прогресса:', error);
+    }
+}
+
+// Загрузка заметок
+function loadNotes() {
+    try {
+        const savedData = localStorage.getItem('bibleNotes');
+        if (savedData) {
+            const parsedData = JSON.parse(savedData);
+            notes = parsedData.notes || {};
+            tags = parsedData.tags || {};
+        }
+        updateTagCloud(); // Обновляем облако тегов после загрузки
+    } catch (error) {
+        console.error('Ошибка загрузки заметок:', error);
+        notes = {};
+        tags = {};
+    }
+}
+
+// Сохранение заметок
+function saveNotes() {
+    try {
+        const data = {
+            notes: notes,
+            tags: tags,
+            lastUpdate: new Date().toISOString()
+        };
+        localStorage.setItem('bibleNotes', JSON.stringify(data));
+    } catch (error) {
+        console.error('Ошибка сохранения заметок:', error);
+    }
+}
+
+// Настройка интерфейса
+function setupUI() {
+    document.getElementById('startDate').addEventListener('change', function() {
+        startDate = new Date(this.value);
+        saveSettings();
+        renderReadingPlan();
+    });
+}
+
+// Получение даты для дня
+function getDateForDay(day) {
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + day - 1);
+    return date;
+}
+
+// Форматирование даты
+function formatDate(date) {
+    return date.toLocaleDateString('ru-RU', { 
+        day: 'numeric', 
+        month: 'short' 
+    });
+}
+
+// Создание карточки чтения
+function createReadingCard(reading, testament) {
+    const readingDate = getDateForDay(reading.day);
+    const today = new Date();
+    const isCompleted = completedReadings[`${testament}-${reading.day}`];
+    const isToday = readingDate.toDateString() === today.toDateString();
+    const isOverdue = readingDate < today && !isCompleted;
+    
+    const card = document.createElement('div');
+    card.className = `reading-card ${isCompleted ? 'completed' : ''} ${isToday ? 'today-highlight' : ''} ${isOverdue ? 'overdue' : ''}`;
+    card.setAttribute('data-day', reading.day);
+    card.setAttribute('data-testament', testament);
+    
+    const noteKey = `${testament}-${reading.day}`;
+    const noteText = notes[noteKey] || '';
+    const noteTags = tags[noteKey] || [];
+    
+    // Создание YouVersion ссылки
+    const youVersionUrl = createYouVersionLink(reading.text);
+    
+    card.innerHTML = `
+        <div class="day-info">
+            <div class="day-number">День ${reading.day}</div>
+            <div class="day-date">${formatDate(readingDate)}</div>
+        </div>
+        <div class="reading-text">${reading.text}</div>
+        <div class="reading-actions">
+            <div class="checkbox-wrapper" onclick="toggleReading('${testament}', ${reading.day})">
+                <div class="custom-checkbox ${isCompleted ? 'checked' : ''}"></div>
+                <span>Прочитано</span>
+            </div>
+            <a href="${youVersionUrl}" target="_blank" class="youversion-link">YouVersion</a>
+        </div>
+        <div class="notes-section">
+            <textarea class="notes-textarea" placeholder="Ваши заметки к этому отрывку..."
+                onchange="saveNote('${testament}', ${reading.day}, this.value)">${noteText}</textarea>
+            <div class="tags-section">
+                <input type="text" class="tags-input" placeholder="Добавить теги (через запятую)"
+                    onkeypress="handleTagInput(event, '${testament}', ${reading.day})"
+                    value="${noteTags.join(', ')}">
+                <div class="tags-display">
+                    ${noteTags.map(tag => {
+                        const tagClass = tagColors[tag.toLowerCase()] || '';
+                        return `<span class="tag ${tagClass}">${tag}<span class="remove-tag" onclick="removeTag('${testament}', ${reading.day}, '${tag}')">×</span></span>`;
+                    }).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    return card;
+}
+
+// Создание ссылки YouVersion
+function createYouVersionLink(text) {
+    const bookMap = {
+        'Бытие': 'GEN',
+        'Исход': 'EXO',
+        'Левит': 'LEV',
+        'Числа': 'NUM',
+        'Второзаконие': 'DEU',
+        'Матфея': 'MAT',
+        'Марка': 'MRK',
+        'Луки': 'LUK',
+        'Иоанна': 'JHN',
+        'Деяния': 'ACT',
+        'Римлянам': 'ROM',
+        'Коринфянам': 'CO'
+    };
+    
+    const bookMatch = text.match(/^([а-яё\s\d]+)/i);
+    if (bookMatch) {
+        const bookName = bookMatch[1].trim();
+        const bookCode = Object.keys(bookMap).find(key => bookName.includes(key));
+        if (bookCode) {
+            const chapters = text.match(/(\d+(?:-\d+)?)/g);
+            if (chapters) {
+                const chapter = chapters[0].split('-')[0];
+                return `https://www.bible.com/bible/143/${bookMap[bookCode]}.${chapter}.RUSV`;
+            }
+        }
+    }
+    
+    return 'https://www.bible.com/ru';
+}
+
+// Отрисовка плана чтения
+function renderReadingPlan() {
+    const oldTestamentContainer = document.getElementById('oldTestament');
+    const newTestamentContainer = document.getElementById('newTestament');
+    
+    oldTestamentContainer.innerHTML = '';
+    newTestamentContainer.innerHTML = '';
+    
+    const oldTestamentReadings = getFilteredReadings(currentPlan.oldTestament);
+    const newTestamentReadings = getFilteredReadings(currentPlan.newTestament);
+    
+    oldTestamentReadings.forEach(reading => {
+        const card = createReadingCard(reading, 'old');
+        oldTestamentContainer.appendChild(card);
+    });
+    
+    newTestamentReadings.forEach(reading => {
+        const card = createReadingCard(reading, 'new');
+        newTestamentContainer.appendChild(card);
+    });
+}
+
+// Фильтрация чтений по текущему виду
+function getFilteredReadings(readings) {
+    const today = new Date();
+    
+    switch (currentView) {
+        case 'today':
+            return readings.filter(reading => {
+                const readingDate = getDateForDay(reading.day);
+                return readingDate.toDateString() === today.toDateString();
+            });
+        case 'week':
+            return readings.filter(reading => {
+                const readingDate = getDateForDay(reading.day);
+                const weekFromNow = new Date(today);
+                weekFromNow.setDate(weekFromNow.getDate() + 7);
+                return readingDate >= today && readingDate <= weekFromNow;
+            });
+        case 'overdue':
+            return readings.filter(reading => {
+                const readingDate = getDateForDay(reading.day);
+                const isCompleted = completedReadings[`old-${reading.day}`] || completedReadings[`new-${reading.day}`];
+                return readingDate < today && !isCompleted;
+            });
+        default:
+            return readings;
+    }
+}
+
+// Переключение чтения
+function toggleReading(testament, day) {
+    const key = `${testament}-${day}`;
+    
+    if (completedReadings[key]) {
+        delete completedReadings[key];
+    } else {
+        completedReadings[key] = true;
+    }
+    
+    saveProgress();
+    renderReadingPlan();
+    updateStats();
+    updateProgressBar();
+}
+
+// Сохранение заметки
+function saveNote(testament, day, noteText) {
+    const key = `${testament}-${day}`;
+    if (noteText.trim()) {
+        notes[key] = noteText.trim();
+    } else {
+        delete notes[key];
+    }
+    saveNotes();
+    updateStats();
+}
+
+// Обработка ввода тегов
+function handleTagInput(event, testament, day) {
+    if (event.key === 'Enter') {
+        const key = `${testament}-${day}`;
+        const tagText = event.target.value;
+        const newTags = tagText.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+        
+        tags[key] = newTags;
+        saveNotes();
+        renderReadingPlan();
+        updateStats();
+        updateTagCloud();
+    }
+}
+
+// Удаление тега
+function removeTag(testament, day, tagToRemove) {
+    const key = `${testament}-${day}`;
+    if (tags[key]) {
+        tags[key] = tags[key].filter(tag => tag !== tagToRemove);
+        saveNotes();
+        renderReadingPlan();
+        updateTagCloud();
+    }
+}
+
+// Обновление облака тегов
+function updateTagCloud() {
+    console.log("Обновление облака тегов. Текущие теги:", tags);
+    const tagCloud = document.getElementById('tagCloud');
+    if (!tagCloud) {
+        console.error("Элемент tagCloud не найден!");
+        return;
+    }
+    
+    tagCloud.innerHTML = '';
+
+    // Считаем частоту тегов
+    const tagFrequency = {};
+    Object.values(tags).forEach(tagList => {
+        tagList.forEach(tag => {
+            tagFrequency[tag] = (tagFrequency[tag] || 0) + 1;
+        });
+    });
+
+    // Сортируем и выводим
+    const sortedTags = Object.keys(tagFrequency).sort((a, b) => tagFrequency[b] - tagFrequency[a]);
+    sortedTags.forEach(tag => {
+        const tagElement = document.createElement('span');
+        tagElement.className = 'tag';
+        // Добавляем класс цвета, если он определен
+        const tagClass = tagColors[tag.toLowerCase()] || '';
+        if (tagClass) {
+            tagElement.classList.add(tagClass);
+        }
+        tagElement.textContent = tag;
+        tagElement.style.fontSize = `${14 + tagFrequency[tag] * 2}px`;
+        tagElement.onclick = () => {
+            document.getElementById('tagSearchInput').value = tag;
+            searchByTag();
+        };
+        tagCloud.appendChild(tagElement);
+    });
+}
+
+// Поиск по тегам
+function searchByTag() {
+    const searchTerm = document.getElementById('tagSearchInput').value.trim().toLowerCase();
+    if (!searchTerm) {
+        showNotification('Введите тег для поиска', 'warning');
+        return;
+    }
+
+    const allCards = document.querySelectorAll('.reading-card');
+    let foundCount = 0;
+
+    allCards.forEach(card => {
+        const day = card.getAttribute('data-day');
+        const testament = card.getAttribute('data-testament');
+        const noteKey = `${testament}-${day}`;
+        const cardTags = tags[noteKey] || [];
+
+        if (cardTags.some(tag => tag.toLowerCase().includes(searchTerm))) {
+            card.style.display = 'block';
+            foundCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    showNotification(`Найдено отрывков: ${foundCount}`, foundCount ? 'success' : 'warning');
+}
+
+// Сброс поиска
+function resetSearch() {
+    document.getElementById('tagSearchInput').value = '';
+    const allCards = document.querySelectorAll('.reading-card');
+    allCards.forEach(card => card.style.display = 'block');
+}
+
+// Обновление статистики
+function updateStats() {
+    const totalReadings = currentPlan.oldTestament.length + currentPlan.newTestament.length;
+    const completedCount = Object.keys(completedReadings).length;
+    const progressPercent = Math.round((completedCount / totalReadings) * 100);
+    const notesCount = Object.keys(notes).length;
+    
+    document.getElementById('totalDays').textContent = totalReadings;
+    document.getElementById('completedDays').textContent = completedCount;
+    document.getElementById('progressPercent').textContent = progressPercent + '%';
+    document.getElementById('notesCount').textContent = notesCount;
+    
+    // Подсчет пропущенных дней
+    const today = new Date();
+    let missedCount = 0;
+    const allReadings = [...currentPlan.oldTestament, ...currentPlan.newTestament];
+    
+    allReadings.forEach(reading => {
+        const readingDate = getDateForDay(reading.day);
+        const testament = currentPlan.oldTestament.includes(reading) ? 'old' : 'new';
+        const isCompleted = completedReadings[`${testament}-${reading.day}`];
+        
+        if (readingDate < today && !isCompleted) {
+            missedCount++;
+        }
+    });
+    
+    document.getElementById('missedDays').textContent = missedCount;
+    
+    // Статистика изучения
+    const studyStartDate = startDate;
+    const daysDiff = Math.floor((today - studyStartDate) / (1000 * 60 * 60 * 24));
+    document.getElementById('studyDuration').textContent = `${daysDiff} дней`;
+    
+    const averagePace = daysDiff > 0 ? Math.round((completedCount / daysDiff) * 100) : 0;
+    document.getElementById('averagePace').textContent = `${averagePace}%`;
+}
+
+// Обновление прогресс-бара
+function updateProgressBar() {
+    const totalReadings = currentPlan.oldTestament.length + currentPlan.newTestament.length;
+    const completedCount = Object.keys(completedReadings).length;
+    const progressPercent = (completedCount / totalReadings) * 100;
+    
+    document.getElementById('progressFill').style.width = progressPercent + '%';
+}
+
+// Переключение вида
+function showView(view) {
+    currentView = view;
+    
+    // Обновляем кнопки
+    document.querySelectorAll('.view-toggle .btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.classList.add('btn-secondary');
+        btn.classList.remove('btn-primary');
+    });
+    
+    event.target.classList.add('active');
+    event.target.classList.add('btn-primary');
+    event.target.classList.remove('btn-secondary');
+    
+    renderReadingPlan();
+}
+
+// Обновление плана
+function updatePlan() {
+    const planType = document.getElementById('planType').value;
+    const newStartDate = new Date(document.getElementById('startDate').value);
+    
+    currentPlan = readingPlans[planType];
+    startDate = newStartDate;
+    
+    saveSettings();
+    renderReadingPlan();
+    updateStats();
+    updateProgressBar();
+    updateTagCloud();
+    
+    showNotification('План обновлен успешно!', 'success');
+}
+
+// Настройка напоминаний
+function setupReminders() {
+    const enabled = document.getElementById('enableNotifications').checked;
+    const time = document.getElementById('reminderTime').value;
+    
+    if (reminderInterval) {
+        clearInterval(reminderInterval);
+        reminderInterval = null;
+    }
+    
+    if (enabled) {
+        // Проверяем каждую минуту
+        reminderInterval = setInterval(() => {
+            const now = new Date();
+            const currentTime = now.getHours().toString().padStart(2, '0') + ':' + 
+                              now.getMinutes().toString().padStart(2, '0');
+            
+            if (currentTime === time) {
+                checkMissedReadings();
+            }
+        }, 60000);
+        
+        showNotification('Напоминания включены!', 'success');
+    } else {
+        showNotification('Напоминания отключены', 'warning');
+    }
+    
+    saveSettings();
+}
+
+// Проверка пропущенных чтений
+function checkMissedReadings() {
+    const today = new Date();
+    let missedReadings = [];
+    
+    const allReadings = [
+        ...currentPlan.oldTestament.map(r => ({...r, testament: 'old'})),
+        ...currentPlan.newTestament.map(r => ({...r, testament: 'new'}))
+    ];
+    
+    allReadings.forEach(reading => {
+        const readingDate = getDateForDay(reading.day);
+        const isCompleted = completedReadings[`${reading.testament}-${reading.day}`];
+        
+        if (readingDate < today && !isCompleted) {
+            missedReadings.push(reading);
+        }
+    });
+    
+    if (missedReadings.length > 0 && document.getElementById('enableNotifications').checked) {
+        showNotification(`У вас ${missedReadings.length} пропущенных чтений`, 'warning');
+    }
+}
+
+// Показ уведомления
+function showNotification(message, type = 'info') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
+
+// Очистка всех данных
+function clearAllData() {
+    if (confirm("Очистить ВСЕ данные (прогресс, заметки, теги, настройки)?")) {
+        localStorage.clear();
+        completedReadings = {};
+        notes = {};
+        tags = {};
+        saveProgress();
+        saveNotes();
+        saveSettings();
+        location.reload();
+    }
+}
+
+// Сброс прогресса
+function resetProgress() {
+    if (confirm('Вы уверены, что хотите сбросить весь прогресс?')) {
+        completedReadings = {};
+        saveProgress();
+        renderReadingPlan();
+        updateStats();
+        updateProgressBar();
+        showNotification('Прогресс сброшен', 'warning');
+    }
+}
+
+// Экспорт заметок
+function exportNotes() {
+    if (Object.keys(notes).length === 0) {
+        showNotification('Нет заметок для экспорта', 'warning');
+        return;
+    }
+    
+    let exportText = '# Заметки к изучению Библии\n\n';
+    exportText += `Экспорт создан: ${new Date().toLocaleDateString('ru-RU')}\n\n`;
+    
+    Object.keys(notes).forEach(key => {
+        const [testament, day] = key.split('-');
+        const testamentName = testament === 'old' ? 'Ветхий Завет' : 'Новый Завет';
+        const readingText = testament === 'old' 
+            ? currentPlan.oldTestament.find(r => r.day == day)?.text 
+            : currentPlan.newTestament.find(r => r.day == day)?.text;
+        
+        exportText += `## День ${day} - ${testamentName}\n`;
+        exportText += `**Отрывок:** ${readingText}\n\n`;
+        exportText += `**Заметки:** ${notes[key]}\n\n`;
+        
+        if (tags[key] && tags[key].length > 0) {
+            exportText += `**Теги:** ${tags[key].join(', ')}\n\n`;
+        }
+        
+        exportText += '---\n\n';
+    });
+    
+    // Создаем и скачиваем файл
+    const blob = new Blob([exportText], { type: 'text/markdown' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bible_notes_${new Date().toISOString().split('T')[0]}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    
+    showNotification('Заметки экспортированы!', 'success');
+}
+
+// Запуск при загрузке страницы
+window.addEventListener('DOMContentLoaded', init);
+    </script>
+
+<script src="bible-planner-help.js"></script>
+</body>
+</html>
