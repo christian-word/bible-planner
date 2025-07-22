@@ -32,71 +32,54 @@
 
   <h1>План чтения Библии (1 месяц)</h1>
   <div id="plan-container"></div>
+ 
+<script src="oldTestament.js"></script>
+<script src="newTestament.js"></script>
 
   <script>
-    const plan = [
-      { old: "Бытие 1", new: "Матфея 1" },
-      { old: "Бытие 2", new: "Матфея 2" },
-      { old: "Бытие 3", new: "Матфея 3" },
-      { old: "Бытие 4", new: "Матфея 4" },
-      { old: "Бытие 5", new: "Матфея 5" },
-      { old: "Бытие 6", new: "Матфея 6" },
-      { old: "Бытие 7", new: "Матфея 7" },
-      { old: "Бытие 8", new: "Матфея 8" },
-      { old: "Бытие 9", new: "Матфея 9" },
-      { old: "Бытие 10", new: "Матфея 10" },
-      { old: "Бытие 11", new: "Матфея 11" },
-      { old: "Бытие 12", new: "Матфея 12" },
-      { old: "Бытие 13", new: "Матфея 13" },
-      { old: "Бытие 14", new: "Матфея 14" },
-      { old: "Бытие 15", new: "Матфея 15" },
-      { old: "Бытие 16", new: "Матфея 16" },
-      { old: "Бытие 17", new: "Матфея 17" },
-      { old: "Бытие 18", new: "Матфея 18" },
-      { old: "Бытие 19", new: "Матфея 19" },
-      { old: "Бытие 20", new: "Матфея 20" },
-      { old: "Бытие 21", new: "Матфея 21" },
-      { old: "Бытие 22", new: "Матфея 22" },
-      { old: "Бытие 23", new: "Матфея 23" },
-      { old: "Бытие 24", new: "Матфея 24" },
-      { old: "Бытие 25", new: "Матфея 25" },
-      { old: "Бытие 26", new: "Матфея 26" },
-      { old: "Бытие 27", new: "Матфея 27" },
-      { old: "Бытие 28", new: "Матфея 28" },
-      { old: "Бытие 29", new: "Марка 1" },
-      { old: "Бытие 30", new: "Марка 2" },
-      { old: "Бытие 31", new: "Марка 3" },
-    ];
+  // Объединённый план: на каждый день одна глава ВЗ и одна глава НЗ (если есть)
+  const maxDays = Math.max(oldTestament.length, newTestament.length);
+  const plan = [];
 
-    const container = document.getElementById("plan-container");
-
-    plan.forEach((entry, i) => {
-      const day = i + 1;
-      const key = `bible_day_${day}`;
-      const isChecked = localStorage.getItem(key) === 'true';
-
-      const div = document.createElement("div");
-      div.className = "day";
-
-      const label = document.createElement("label");
-      label.className = isChecked ? "done" : "";
-
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = isChecked;
-      checkbox.addEventListener("change", () => {
-        localStorage.setItem(key, checkbox.checked);
-        label.className = checkbox.checked ? "done" : "";
-      });
-
-      label.appendChild(checkbox);
-      label.appendChild(document.createTextNode(
-        `День ${day}: Ветхий Завет — ${entry.old}, Новый Завет — ${entry.new}`
-      ));
-
-      div.appendChild(label);
-      container.appendChild(div);
+  for (let i = 0; i < maxDays; i++) {
+    plan.push({
+      old: oldTestament[i] || null,
+      new: newTestament[i] || null
     });
+  }
+
+  const container = document.getElementById("plan-container");
+
+  plan.forEach((entry, i) => {
+    const day = i + 1;
+    const key = `bible_day_${day}`;
+    const isChecked = localStorage.getItem(key) === 'true';
+
+    const div = document.createElement("div");
+    div.className = "day";
+
+    const label = document.createElement("label");
+    label.className = isChecked ? "done" : "";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = isChecked;
+    checkbox.addEventListener("change", () => {
+      localStorage.setItem(key, checkbox.checked);
+      label.className = checkbox.checked ? "done" : "";
+    });
+
+    label.appendChild(checkbox);
+
+    let text = `День ${day}:`;
+    if (entry.old) text += ` Ветхий Завет — ${entry.old}`;
+    if (entry.old && entry.new) text += `   ||   `;
+    if (entry.new) text += ` Новый Завет — ${entry.new}`;
+
+    label.appendChild(document.createTextNode(text));
+    div.appendChild(label);
+    container.appendChild(div);
+  });
   </script>
 
 </body>
