@@ -1,10 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Расширенный план изучения Библии</title>
-
     <style>
         * {
             box-sizing: border-box;
@@ -54,12 +53,40 @@
             transition: width 0.5s ease;
         }
 
-        .setup-section {
-            padding: 30px;
-            background: #f8f9fa;
+        /* Стили для вкладок */
+        .tabs {
+            display: flex;
             border-bottom: 1px solid #e9ecef;
         }
 
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: #f8f9fa;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid #3498db;
+            background: white;
+            color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 25px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Общие стили для контента */
         .setup-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -105,32 +132,6 @@
             border-color: #3498db;
         }
 
-        .controls {
-            padding: 20px 30px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .view-toggle {
-            display: flex;
-            gap: 10px;
-        }
-
-        .tag-search {
-            display: flex;
-            gap: 10px;
-            margin-left: auto;
-        }
-
-        #tagSearchInput {
-            width: 200px;
-        }
-
         .btn {
             padding: 10px 20px;
             border: none;
@@ -174,15 +175,6 @@
         .btn-danger {
             background: #e74c3c;
             color: white;
-        }
-
-        .btn.active {
-            background: #27ae60;
-            transform: scale(1.05);
-        }
-
-        .content {
-            padding: 30px;
         }
 
         .tag-cloud-section {
@@ -508,22 +500,18 @@
         }
 
         @media (max-width: 768px) {
-            .controls {
+            .tabs {
                 flex-direction: column;
-                align-items: stretch;
             }
-
-            .tag-search {
-                margin-left: 0;
-                width: 100%;
+            
+            .tab {
+                padding: 12px;
+                border-bottom: 1px solid #e9ecef;
             }
-
-            #tagSearchInput {
-                width: 100%;
-            }
-
-            .view-toggle {
-                justify-content: center;
+            
+            .tab.active {
+                border-left: 3px solid #3498db;
+                border-bottom: none;
             }
 
             .reading-grid {
@@ -550,7 +538,68 @@
             </div>
         </div>
 
-        <div class="setup-section">
+        <!-- Вкладки -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('plan')">📅 План</div>
+            <div class="tab" onclick="showTab('settings')">⚙️ Настройки</div>
+            <div class="tab" onclick="showTab('actions')">🗑️ Действия</div>
+        </div>
+
+        <!-- Контент вкладки "План" -->
+        <div id="plan-tab" class="tab-content active">
+            <div class="controls">
+                <div class="view-toggle">
+                    <button class="btn btn-primary active" onclick="showView('all')">Все дни</button>
+                    <button class="btn btn-secondary" onclick="showView('today')">Сегодня</button>
+                    <button class="btn btn-secondary" onclick="showView('week')">Неделя</button>
+                    <button class="btn btn-secondary" onclick="showView('overdue')">Пропущенные</button>
+                </div>
+                <div class="tag-search">
+                    <input type="text" id="tagSearchInput" placeholder="Поиск по тегам..." class="form-control">
+                    <button class="btn btn-primary" onclick="searchByTag()">Найти</button>
+                    <button class="btn btn-secondary" onclick="resetSearch()">Сбросить</button>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="tag-cloud-section">
+                    <h3>Облако тегов</h3>
+                    <div class="tag-cloud" id="tagCloud"></div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalDays">365</div>
+                        <div class="stat-label">Всего дней</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="completedDays">0</div>
+                        <div class="stat-label">Завершено</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="progressPercent">0%</div>
+                        <div class="stat-label">Прогресс</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="notesCount">0</div>
+                        <div class="stat-label">Заметок</div>
+                    </div>
+                </div>
+
+                <div class="testament-section">
+                    <h2 class="testament-title">📜 Ветхий Завет</h2>
+                    <div class="reading-grid" id="oldTestament"></div>
+                </div>
+
+                <div class="testament-section">
+                    <h2 class="testament-title">✝️ Новый Завет</h2>
+                    <div class="reading-grid" id="newTestament"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Контент вкладки "Настройки" -->
+        <div id="settings-tab" class="tab-content">
             <div class="setup-grid">
                 <div class="setup-item">
                     <h3>📅 Настройка плана</h3>
@@ -593,58 +642,26 @@
             </div>
         </div>
 
-        <div class="controls">
-            <div class="view-toggle">
-                <button class="btn btn-primary active" onclick="showView('all')">Все дни</button>
-                <button class="btn btn-secondary" onclick="showView('today')">Сегодня</button>
-                <button class="btn btn-secondary" onclick="showView('week')">Неделя</button>
-                <button class="btn btn-secondary" onclick="showView('overdue')">Пропущенные</button>
-            </div>
-            <div class="tag-search">
-                <input type="text" id="tagSearchInput" placeholder="Поиск по тегам..." class="form-control">
-                <button class="btn btn-primary" onclick="searchByTag()">Найти</button>
-                <button class="btn btn-secondary" onclick="resetSearch()">Сбросить</button>
-            </div>
-            <div>
-                <button class="btn btn-danger" onclick="clearAllData()">Очистить все</button>
-                <button class="btn btn-secondary" onclick="resetProgress()">Сбросить прогресс</button>
-                <button class="btn btn-warning" onclick="exportNotes()">Экспорт заметок</button>
-            </div>
-        </div>
-
-        <div class="content">
-            <div class="tag-cloud-section">
-                <h3>Облако тегов</h3>
-                <div class="tag-cloud" id="tagCloud"></div>
-            </div>
-
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalDays">365</div>
-                    <div class="stat-label">Всего дней</div>
+        <!-- Контент вкладки "Действия" -->
+        <div id="actions-tab" class="tab-content">
+            <div class="setup-grid">
+                <div class="setup-item">
+                    <h3>💾 Экспорт заметок</h3>
+                    <p>Сохраните все ваши заметки в файл формата Markdown</p>
+                    <button class="btn btn-warning" onclick="exportNotes()">Экспортировать заметки</button>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="completedDays">0</div>
-                    <div class="stat-label">Завершено</div>
+                
+                <div class="setup-item">
+                    <h3>🔁 Сброс прогресса</h3>
+                    <p>Сбросить все отметки о прочтении</p>
+                    <button class="btn btn-secondary" onclick="resetProgress()">Сбросить прогресс</button>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="progressPercent">0%</div>
-                    <div class="stat-label">Прогресс</div>
+                
+                <div class="setup-item">
+                    <h3>🗑️ Очистка данных</h3>
+                    <p>Удалить все данные (прогресс, заметки, настройки)</p>
+                    <button class="btn btn-danger" onclick="clearAllData()">Очистить все</button>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="notesCount">0</div>
-                    <div class="stat-label">Заметок</div>
-                </div>
-            </div>
-
-            <div class="testament-section">
-                <h2 class="testament-title">📜 Ветхий Завет</h2>
-                <div class="reading-grid" id="oldTestament"></div>
-            </div>
-
-            <div class="testament-section">
-                <h2 class="testament-title">✝️ Новый Завет</h2>
-                <div class="reading-grid" id="newTestament"></div>
             </div>
         </div>
     </div>
@@ -965,21 +982,25 @@ function createReadingCard(reading, testament) {
             </div>
             <a href="${youVersionUrl}" target="_blank" class="youversion-link">YouVersion</a>
         </div>
-        <div class="notes-section">
-            <textarea class="notes-textarea" placeholder="Ваши заметки к этому отрывку..."
-                onchange="saveNote('${testament}', ${reading.day}, this.value)">${noteText}</textarea>
-            <div class="tags-section">
-                <input type="text" class="tags-input" placeholder="Добавить теги (через запятую)"
-                    onkeypress="handleTagInput(event, '${testament}', ${reading.day})"
-                    value="${noteTags.join(', ')}">
-                <div class="tags-display">
-                    ${noteTags.map(tag => {
-                        const tagClass = tagColors[tag.toLowerCase()] || '';
-                        return `<span class="tag ${tagClass}">${tag}<span class="remove-tag" onclick="removeTag('${testament}', ${reading.day}, '${tag}')">×</span></span>`;
-                    }).join('')}
-                </div>
-            </div>
+<div class="notes-section">
+    <textarea class="notes-textarea" placeholder="Ваши заметки к этому отрывку..."
+        onchange="saveNote('${testament}', ${reading.day}, this.value)">${noteText}</textarea>
+    <div class="tags-section">
+        <div style="display:flex; gap:5px;">
+            <input type="text" class="tags-input" placeholder="Добавить теги (через запятую)"
+                id="tag-input-${testament}-${reading.day}"
+                value="${noteTags.join(', ')}">
+            <button class="btn btn-primary" style="padding: 5px 10px;" onclick="saveTags('${testament}', ${reading.day})">💾</button>
         </div>
+        <div class="tags-display">
+            ${noteTags.map(tag => {
+                const tagClass = tagColors[tag.toLowerCase()] || '';
+                return `<span class="tag ${tagClass}">${tag}<span class="remove-tag" onclick="removeTag('${testament}', ${reading.day}, '${tag}')">×</span></span>`;
+            }).join('')}
+        </div>
+    </div>
+</div>
+
     `;
     
     return card;
@@ -1124,13 +1145,7 @@ function removeTag(testament, day, tagToRemove) {
 
 // Обновление облака тегов
 function updateTagCloud() {
-    console.log("Обновление облака тегов. Текущие теги:", tags);
     const tagCloud = document.getElementById('tagCloud');
-    if (!tagCloud) {
-        console.error("Элемент tagCloud не найден!");
-        return;
-    }
-    
     tagCloud.innerHTML = '';
 
     // Считаем частоту тегов
@@ -1259,6 +1274,25 @@ function showView(view) {
     event.target.classList.remove('btn-secondary');
     
     renderReadingPlan();
+}
+
+// Переключение вкладок
+function showTab(tabName) {
+    // Скрываем все вкладки
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Деактивируем все кнопки вкладок
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Показываем нужную вкладку
+    document.getElementById(`${tabName}-tab`).classList.add('active');
+    
+    // Активируем нужную кнопку
+    event.target.classList.add('active');
 }
 
 // Обновление плана
@@ -1412,10 +1446,20 @@ function exportNotes() {
     showNotification('Заметки экспортированы!', 'success');
 }
 
+function saveTags(testament, day) {
+    const key = `${testament}-${day}`;
+    const input = document.getElementById(`tag-input-${testament}-${day}`);
+    const tagText = input.value;
+    const newTags = tagText.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+
+    tags[key] = newTags;
+    saveNotes();
+    renderReadingPlan();
+    updateStats();
+    updateTagCloud();
+}
 // Запуск при загрузке страницы
 window.addEventListener('DOMContentLoaded', init);
     </script>
-
-<script src="bible-planner-help.js"></script>
 </body>
 </html>
