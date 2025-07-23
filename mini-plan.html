@@ -76,76 +76,6 @@
       color: #64748b;
       font-size: 0.95rem;
       font-weight: 500;
-      margin-bottom: 15px;
-    }
-
-    .testament-toggles {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .testament-toggle {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      background: white;
-      border: 2px solid #e2e8f0;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-weight: 500;
-    }
-
-    .testament-toggle:hover {
-      border-color: #4facfe;
-      transform: translateY(-1px);
-    }
-
-    .testament-toggle.active {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      color: white;
-      border-color: #4facfe;
-    }
-
-    .testament-toggle input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      margin: 0;
-    }
-
-    .controls {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      background: white;
-      color: #475569;
-      border: 1px solid #e2e8f0;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn.active {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      color: white;
-      border-color: #4facfe;
     }
 
     .plan-container {
@@ -191,15 +121,6 @@
       border-color: #4facfe;
     }
 
-    .day.missed {
-      background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
-      border-color: #fdcb6e;
-    }
-
-    .day.hidden {
-      display: none;
-    }
-
     .day-content {
       padding: 20px;
       display: flex;
@@ -208,32 +129,14 @@
     }
 
     .checkbox-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .checkbox-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
-      color: #64748b;
+      position: relative;
     }
 
     input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
       border: 2px solid #cbd5e1;
-      border-radius: 4px;
+      border-radius: 6px;
       background: white;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -253,13 +156,8 @@
       left: 50%;
       transform: translate(-50%, -50%);
       color: white;
-      font-size: 12px;
+      font-size: 14px;
       font-weight: bold;
-    }
-
-    .testament-toggle input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
     }
 
     .day-info {
@@ -295,29 +193,13 @@
       border-left: 4px solid #06b6d4;
     }
 
-    .reading.hidden {
-      display: none;
-    }
-
     .completed .day-number,
     .completed .reading {
       opacity: 0.7;
     }
 
-    .partially-completed {
-      background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-      border-color: #ffc107;
-    }
-
-    .completed .reading.completed-reading {
+    .completed .reading {
       text-decoration: line-through;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: #64748b;
-      font-style: italic;
     }
 
     @media (max-width: 768px) {
@@ -363,15 +245,6 @@
         font-size: 0.9rem;
         padding: 5px 10px;
       }
-
-      .controls {
-        gap: 8px;
-      }
-
-      .btn {
-        font-size: 0.8rem;
-        padding: 6px 12px;
-      }
     }
 
     @media (max-width: 480px) {
@@ -409,30 +282,16 @@
       <div class="progress-text" id="progressText">
         Прочитано: 0 из 0 дней (0%)
       </div>
-      <div class="testament-toggles">
-        <label class="testament-toggle active" id="oldTestamentToggle">
-          <input type="checkbox" id="showOldTestament" checked>
-          <span>Ветхий Завет</span>
-        </label>
-        <label class="testament-toggle active" id="newTestamentToggle">
-          <input type="checkbox" id="showNewTestament" checked>
-          <span>Новый Завет</span>
-        </label>
-      </div>
-      <div class="controls">
-        <button class="btn active" id="showAll">Все дни</button>
-        <button class="btn" id="showCompleted">Прочитанные</button>
-        <button class="btn" id="showPending">Непрочитанные</button>
-        <button class="btn" id="resetProgress">Сбросить прогресс</button>
-      </div>
     </div>
 
     <div class="plan-container" id="planContainer">
       <!-- Содержимое генерируется JS -->
     </div>
   </div>
+ 
 <script src="oldTestament.js"></script>
 <script src="newTestament.js"></script>
+
   <script>
     // Создание плана
     const maxDays = Math.max(oldTestament.length, newTestament.length);
@@ -445,249 +304,33 @@
       });
     }
 
-    // Состояние приложения
-    let bibleProgress = {};
-    let currentFilter = 'all';
-    let showOldTestament = true;
-    let showNewTestament = true;
-
-    // Функции для работы с прогрессом
-    function setBibleProgress(key, value) {
-      bibleProgress[key] = value;
-      updateProgress();
-      updateDayStatus();
-      applyFilter(currentFilter);
-    }
-
-    function getBibleProgress(key) {
-      return bibleProgress[key] === true;
-    }
-
-    // Функция обновления статуса дня
-    function updateDayStatus() {
-      document.querySelectorAll('.day').forEach((day, index) => {
-        const dayNumber = index + 1;
-        const oldCompleted = getBibleProgress(`bible_day_${dayNumber}_old`);
-        const newCompleted = getBibleProgress(`bible_day_${dayNumber}_new`);
-        
-        // Удаляем все классы состояния
-        day.classList.remove('completed', 'partially-completed');
-        
-        // Определяем новое состояние
-        const hasOldReading = plan[index].old !== null;
-        const hasNewReading = plan[index].new !== null;
-        
-        let completedCount = 0;
-        let totalCount = 0;
-        
-        if (hasOldReading) {
-          totalCount++;
-          if (oldCompleted) completedCount++;
-        }
-        
-        if (hasNewReading) {
-          totalCount++;
-          if (newCompleted) completedCount++;
-        }
-        
-        if (completedCount === totalCount && totalCount > 0) {
-          day.classList.add('completed');
-        } else if (completedCount > 0) {
-          day.classList.add('partially-completed');
-        }
-        
-        // Обновляем визуальное состояние чтений
-        const readings = day.querySelectorAll('.reading');
-        readings.forEach(reading => {
-          reading.classList.remove('completed-reading');
-          if (reading.classList.contains('old-testament') && oldCompleted) {
-            reading.classList.add('completed-reading');
-          } else if (reading.classList.contains('new-testament') && newCompleted) {
-            reading.classList.add('completed-reading');
-          }
-        });
-      });
-    }
-
     // Функция обновления прогресса
     function updateProgress() {
       const totalDays = plan.length;
       let completedDays = 0;
-      let totalReadings = 0;
-      let completedReadings = 0;
 
       for (let i = 1; i <= totalDays; i++) {
-        const planEntry = plan[i - 1];
-        let dayReadings = 0;
-        let dayCompleted = 0;
-        
-        if (planEntry.old) {
-          totalReadings++;
-          dayReadings++;
-          if (getBibleProgress(`bible_day_${i}_old`)) {
-            completedReadings++;
-            dayCompleted++;
-          }
-        }
-        
-        if (planEntry.new) {
-          totalReadings++;
-          dayReadings++;
-          if (getBibleProgress(`bible_day_${i}_new`)) {
-            completedReadings++;
-            dayCompleted++;
-          }
-        }
-        
-        // День считается полностью завершенным, если прочитаны все его части
-        if (dayCompleted === dayReadings && dayReadings > 0) {
+        if (getBibleProgress(`bible_day_${i}`)) {
           completedDays++;
         }
       }
 
-      const dayPercentage = totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0;
-      const readingPercentage = totalReadings > 0 ? Math.round((completedReadings / totalReadings) * 100) : 0;
+      const percentage = Math.round((completedDays / totalDays) * 100);
       
-      document.getElementById('progressFill').style.width = `${readingPercentage}%`;
-      document.getElementById('progressText').innerHTML = 
-        `Прочитано: ${completedDays} из ${totalDays} дней (${dayPercentage}%)<br>
-         <small>Отрывков: ${completedReadings} из ${totalReadings} (${readingPercentage}%)</small>`;
+      document.getElementById('progressFill').style.width = `${percentage}%`;
+      document.getElementById('progressText').textContent = 
+        `Прочитано: ${completedDays} из ${totalDays} дней (${percentage}%)`;
     }
 
-    // Функция применения фильтра
-    function applyFilter(filter) {
-      currentFilter = filter;
-      const days = document.querySelectorAll('.day');
-      let visibleCount = 0;
+    // Функции для работы с прогрессом (замена localStorage)
+    let bibleProgress = {};
 
-      days.forEach((day, index) => {
-        const dayNumber = index + 1;
-        const planEntry = plan[index];
-        
-        // Проверяем состояние чтений
-        const oldCompleted = getBibleProgress(`bible_day_${dayNumber}_old`);
-        const newCompleted = getBibleProgress(`bible_day_${dayNumber}_new`);
-        
-        const hasOldReading = planEntry.old !== null;
-        const hasNewReading = planEntry.new !== null;
-        
-        let totalParts = 0;
-        let completedParts = 0;
-        
-        if (hasOldReading) {
-          totalParts++;
-          if (oldCompleted) completedParts++;
-        }
-        
-        if (hasNewReading) {
-          totalParts++;
-          if (newCompleted) completedParts++;
-        }
-        
-        const isFullyCompleted = completedParts === totalParts && totalParts > 0;
-        const isPartiallyCompleted = completedParts > 0 && completedParts < totalParts;
-        const isPending = completedParts === 0;
-        
-        let shouldShow = false;
-
-        switch (filter) {
-          case 'all':
-            shouldShow = true;
-            break;
-          case 'completed':
-            shouldShow = isFullyCompleted;
-            break;
-          case 'pending':
-            shouldShow = isPending || isPartiallyCompleted;
-            break;
-        }
-
-        if (shouldShow) {
-          day.classList.remove('hidden');
-          visibleCount++;
-        } else {
-          day.classList.add('hidden');
-        }
-      });
-
-      // Показать сообщение если нет элементов
-      const container = document.getElementById('planContainer');
-      let emptyState = container.querySelector('.empty-state');
-      
-      if (visibleCount === 0) {
-        if (!emptyState) {
-          emptyState = document.createElement('div');
-          emptyState.className = 'empty-state';
-          container.appendChild(emptyState);
-        }
-        
-        let message = '';
-        switch (filter) {
-          case 'completed':
-            message = 'Пока нет полностью прочитанных дней. Начните читать!';
-            break;
-          case 'pending':
-            message = 'Поздравляем! Все дни прочитаны полностью!';
-            break;
-          default:
-            message = 'Нет данных для отображения';
-        }
-        emptyState.textContent = message;
-        emptyState.style.display = 'block';
-      } else if (emptyState) {
-        emptyState.style.display = 'none';
-      }
-
-      // Обновить активную кнопку
-      document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
-      const activeButton = {
-        'all': 'showAll',
-        'completed': 'showCompleted',
-        'pending': 'showPending'
-      }[filter];
-      if (activeButton) {
-        document.getElementById(activeButton).classList.add('active');
-      }
+    function setBibleProgress(key, value) {
+      bibleProgress[key] = value;
     }
 
-    // Функция обновления видимости чтений
-    function updateReadingsVisibility() {
-      document.querySelectorAll('.day').forEach(day => {
-        const oldReading = day.querySelector('.reading.old-testament');
-        const newReading = day.querySelector('.reading.new-testament');
-        
-        if (oldReading) {
-          oldReading.classList.toggle('hidden', !showOldTestament);
-        }
-        if (newReading) {
-          newReading.classList.toggle('hidden', !showNewTestament);
-        }
-        
-        // Обновляем чекбоксы
-        const checkboxWrapper = day.querySelector('.checkbox-wrapper');
-        const oldCheckbox = checkboxWrapper.querySelector('.old-checkbox');
-        const newCheckbox = checkboxWrapper.querySelector('.new-checkbox');
-        
-        if (oldCheckbox) {
-          oldCheckbox.parentElement.style.display = showOldTestament ? 'flex' : 'none';
-        }
-        if (newCheckbox) {
-          newCheckbox.parentElement.style.display = showNewTestament ? 'flex' : 'none';
-        }
-      });
-    }
-
-    // Функция сброса прогресса
-    function resetProgress() {
-      if (confirm('Вы уверены, что хотите сбросить весь прогресс?')) {
-        bibleProgress = {};
-        document.querySelectorAll('input[type="checkbox"]:not(#showOldTestament):not(#showNewTestament)').forEach(checkbox => {
-          checkbox.checked = false;
-        });
-        updateDayStatus();
-        updateProgress();
-        applyFilter(currentFilter);
-      }
+    function getBibleProgress(key) {
+      return bibleProgress[key] === 'true';
     }
 
     // Создание интерфейса
@@ -695,11 +338,11 @@
 
     plan.forEach((entry, i) => {
       const day = i + 1;
-      const oldKey = `bible_day_${day}_old`;
-      const newKey = `bible_day_${day}_new`;
+      const key = `bible_day_${day}`;
+      const isChecked = getBibleProgress(key);
 
       const div = document.createElement('div');
-      div.className = 'day';
+      div.className = `day ${isChecked ? 'completed' : ''}`;
 
       const dayContent = document.createElement('div');
       dayContent.className = 'day-content';
@@ -707,55 +350,16 @@
       const checkboxWrapper = document.createElement('div');
       checkboxWrapper.className = 'checkbox-wrapper';
 
-      // Создаем группу чекбоксов
-      const checkboxGroup = document.createElement('div');
-      checkboxGroup.className = 'checkbox-group';
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = isChecked;
+      checkbox.addEventListener('change', () => {
+        setBibleProgress(key, checkbox.checked);
+        div.className = `day ${checkbox.checked ? 'completed' : ''}`;
+        updateProgress();
+      });
 
-      // Чекбокс для Ветхого Завета
-      if (entry.old) {
-        const oldCheckboxItem = document.createElement('div');
-        oldCheckboxItem.className = 'checkbox-item';
-        
-        const oldCheckbox = document.createElement('input');
-        oldCheckbox.type = 'checkbox';
-        oldCheckbox.className = 'old-checkbox';
-        oldCheckbox.checked = getBibleProgress(oldKey);
-        oldCheckbox.addEventListener('change', () => {
-          setBibleProgress(oldKey, oldCheckbox.checked);
-        });
-
-        const oldLabel = document.createElement('span');
-        oldLabel.textContent = 'ВЗ';
-        oldLabel.style.color = '#8b5cf6';
-
-        oldCheckboxItem.appendChild(oldCheckbox);
-        oldCheckboxItem.appendChild(oldLabel);
-        checkboxGroup.appendChild(oldCheckboxItem);
-      }
-
-      // Чекбокс для Нового Завета
-      if (entry.new) {
-        const newCheckboxItem = document.createElement('div');
-        newCheckboxItem.className = 'checkbox-item';
-        
-        const newCheckbox = document.createElement('input');
-        newCheckbox.type = 'checkbox';
-        newCheckbox.className = 'new-checkbox';
-        newCheckbox.checked = getBibleProgress(newKey);
-        newCheckbox.addEventListener('change', () => {
-          setBibleProgress(newKey, newCheckbox.checked);
-        });
-
-        const newLabel = document.createElement('span');
-        newLabel.textContent = 'НЗ';
-        newLabel.style.color = '#06b6d4';
-
-        newCheckboxItem.appendChild(newCheckbox);
-        newCheckboxItem.appendChild(newLabel);
-        checkboxGroup.appendChild(newCheckboxItem);
-      }
-
-      checkboxWrapper.appendChild(checkboxGroup);
+      checkboxWrapper.appendChild(checkbox);
 
       const dayInfo = document.createElement('div');
       dayInfo.className = 'day-info';
@@ -790,30 +394,8 @@
       container.appendChild(div);
     });
 
-    // Обработчики событий для кнопок
-    document.getElementById('showAll').addEventListener('click', () => applyFilter('all'));
-    document.getElementById('showCompleted').addEventListener('click', () => applyFilter('completed'));
-    document.getElementById('showPending').addEventListener('click', () => applyFilter('pending'));
-    document.getElementById('resetProgress').addEventListener('click', resetProgress);
-
-    // Обработчики для переключения Заветов
-    document.getElementById('showOldTestament').addEventListener('change', (e) => {
-      showOldTestament = e.target.checked;
-      document.getElementById('oldTestamentToggle').classList.toggle('active', showOldTestament);
-      updateReadingsVisibility();
-    });
-
-    document.getElementById('showNewTestament').addEventListener('change', (e) => {
-      showNewTestament = e.target.checked;
-      document.getElementById('newTestamentToggle').classList.toggle('active', showNewTestament);
-      updateReadingsVisibility();
-    });
-
-    // Инициализация
-    updateDayStatus();
+    // Инициализация прогресса
     updateProgress();
-    updateReadingsVisibility();
-    applyFilter('all');
   </script>
 </body>
 </html>
