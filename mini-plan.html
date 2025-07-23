@@ -1,86 +1,833 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>План чтения Библии — Месяц</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>План чтения Библии</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
       padding: 20px;
-      max-width: 800px;
-      margin: auto;
-      background: #f8f8f8;
+      line-height: 1.6;
     }
-    h1 { text-align: center; }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      padding: 30px;
+      text-align: center;
+      color: white;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    .progress-section {
+      padding: 25px 30px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .progress-bar {
+      background: #e2e8f0;
+      border-radius: 10px;
+      height: 12px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .progress-text {
+      text-align: center;
+      color: #64748b;
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+
+    .testament-toggles {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .testament-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .testament-toggle:hover {
+      border-color: #4facfe;
+      transform: translateY(-1px);
+    }
+
+    .testament-toggle.active {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      border-color: #4facfe;
+    }
+
+    .testament-toggle input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: white;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn.active {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      border-color: #4facfe;
+    }
+
+    .plan-container {
+      padding: 20px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    .plan-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .plan-container::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+
+    .plan-container::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .plan-container::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
     .day {
-      background: #fff;
-      margin: 10px 0;
-      padding: 10px;
-      border-left: 5px solid #66a;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      background: white;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
     }
-    label.done {
-      text-decoration: line-through;
-      color: gray;
+
+    .day:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     }
+
+    .day.completed {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      border-color: #4facfe;
+    }
+
+    .day.missed {
+      background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+      border-color: #fdcb6e;
+    }
+
+    .day.hidden {
+      display: none;
+    }
+
+    .day-content {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .checkbox-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
     input[type="checkbox"] {
-      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #cbd5e1;
+      border-radius: 4px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      appearance: none;
+      position: relative;
+    }
+
+    input[type="checkbox"]:checked {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      border-color: #4facfe;
+    }
+
+    input[type="checkbox"]:checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .testament-toggle input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+    }
+
+    .day-info {
+      flex: 1;
+    }
+
+    .day-number {
+      font-weight: 600;
+      color: #1e293b;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .readings {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .reading {
+      font-size: 0.95rem;
+      color: #475569;
+      padding: 6px 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+    }
+
+    .reading.old-testament {
+      border-left: 4px solid #8b5cf6;
+    }
+
+    .reading.new-testament {
+      border-left: 4px solid #06b6d4;
+    }
+
+    .reading.hidden {
+      display: none;
+    }
+
+    .completed .day-number,
+    .completed .reading {
+      opacity: 0.7;
+    }
+
+    .partially-completed {
+      background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+      border-color: #ffc107;
+    }
+
+    .completed .reading.completed-reading {
+      text-decoration: line-through;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        border-radius: 15px;
+      }
+
+      header {
+        padding: 25px 20px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .progress-section {
+        padding: 20px;
+      }
+
+      .plan-container {
+        padding: 15px;
+        max-height: 50vh;
+      }
+
+      .day-content {
+        padding: 15px;
+        gap: 12px;
+      }
+
+      .readings {
+        gap: 4px;
+      }
+
+      .reading {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+      }
+
+      .controls {
+        gap: 8px;
+      }
+
+      .btn {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .day-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .checkbox-wrapper {
+        align-self: flex-end;
+      }
+
+      .day-info {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <h1>План чтения Библии</h1>
+      <div class="subtitle">Ветхий и Новый Заветы за год</div>
+    </header>
 
-  <h1>План чтения Библии (1 месяц)</h1>
-  <div id="plan-container"></div>
- 
-<script src="oldTestament.js"></script>
-<script src="newTestament.js"></script>
+    <div class="progress-section">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text" id="progressText">
+        Прочитано: 0 из 0 дней (0%)
+      </div>
+      <div class="testament-toggles">
+        <label class="testament-toggle active" id="oldTestamentToggle">
+          <input type="checkbox" id="showOldTestament" checked>
+          <span>Ветхий Завет</span>
+        </label>
+        <label class="testament-toggle active" id="newTestamentToggle">
+          <input type="checkbox" id="showNewTestament" checked>
+          <span>Новый Завет</span>
+        </label>
+      </div>
+      <div class="controls">
+        <button class="btn active" id="showAll">Все дни</button>
+        <button class="btn" id="showCompleted">Прочитанные</button>
+        <button class="btn" id="showPending">Непрочитанные</button>
+        <button class="btn" id="resetProgress">Сбросить прогресс</button>
+      </div>
+    </div>
+
+    <div class="plan-container" id="planContainer">
+      <!-- Содержимое генерируется JS -->
+    </div>
+  </div>
 
   <script>
-  // Объединённый план: на каждый день одна глава ВЗ и одна глава НЗ (если есть)
-  const maxDays = Math.max(oldTestament.length, newTestament.length);
-  const plan = [];
+    // Данные Ветхого Завета
+    const oldTestament = [
+      "Бытие 1", "Бытие 2", "Бытие 3", "Бытие 4", "Бытие 5", "Бытие 6", "Бытие 7", "Бытие 8", "Бытие 9", "Бытие 10",
+      "Бытие 11", "Бытие 12", "Бытие 13", "Бытие 14", "Бытие 15", "Бытие 16", "Бытие 17", "Бытие 18", "Бытие 19", "Бытие 20",
+      "Бытие 21", "Бытие 22", "Бытие 23", "Бытие 24", "Бытие 25", "Бытие 26", "Бытие 27", "Бытие 28", "Бытие 29", "Бытие 30",
+       "Второзаконие 34"
+    ];
 
-  for (let i = 0; i < maxDays; i++) {
-    plan.push({
-      old: oldTestament[i] || null,
-      new: newTestament[i] || null
+    // Данные Нового Завета
+    const newTestament = [
+      "Матфея 1", "Матфея 2", "Матфея 3", "Матфея 4", "Матфея 5", "Матфея 6", "Матфея 7", "Матфея 8", "Матфея 9", "Матфея 10",
+      "Матфея 11", "Матфея 12", "Матфея 13", "Матфея 14", "Матфея 15", "Матфея 16", "Матфея 17", "Матфея 18", "Матфея 19", "Матфея 20",
+      "Матфея 21", "Матфея 22", "Матфея 23", "Матфея 24", "Матфея 25", "Матфея 26", "Матфея 27", "Матфея 28", "Марка 1", "Марка 2",
+    ];
+
+    // Создание плана
+    const maxDays = Math.max(oldTestament.length, newTestament.length);
+    const plan = [];
+
+    for (let i = 0; i < maxDays; i++) {
+      plan.push({
+        old: oldTestament[i] || null,
+        new: newTestament[i] || null
+      });
+    }
+
+    // Состояние приложения
+    let bibleProgress = {};
+    let currentFilter = 'all';
+    let showOldTestament = true;
+    let showNewTestament = true;
+
+    // Функции для работы с прогрессом
+    function setBibleProgress(key, value) {
+      bibleProgress[key] = value;
+      updateProgress();
+      updateDayStatus();
+      applyFilter(currentFilter);
+    }
+
+    function getBibleProgress(key) {
+      return bibleProgress[key] === true;
+    }
+
+    // Функция обновления статуса дня
+    function updateDayStatus() {
+      document.querySelectorAll('.day').forEach((day, index) => {
+        const dayNumber = index + 1;
+        const oldCompleted = getBibleProgress(`bible_day_${dayNumber}_old`);
+        const newCompleted = getBibleProgress(`bible_day_${dayNumber}_new`);
+        
+        // Удаляем все классы состояния
+        day.classList.remove('completed', 'partially-completed');
+        
+        // Определяем новое состояние
+        const hasOldReading = plan[index].old !== null;
+        const hasNewReading = plan[index].new !== null;
+        
+        let completedCount = 0;
+        let totalCount = 0;
+        
+        if (hasOldReading) {
+          totalCount++;
+          if (oldCompleted) completedCount++;
+        }
+        
+        if (hasNewReading) {
+          totalCount++;
+          if (newCompleted) completedCount++;
+        }
+        
+        if (completedCount === totalCount && totalCount > 0) {
+          day.classList.add('completed');
+        } else if (completedCount > 0) {
+          day.classList.add('partially-completed');
+        }
+        
+        // Обновляем визуальное состояние чтений
+        const readings = day.querySelectorAll('.reading');
+        readings.forEach(reading => {
+          reading.classList.remove('completed-reading');
+          if (reading.classList.contains('old-testament') && oldCompleted) {
+            reading.classList.add('completed-reading');
+          } else if (reading.classList.contains('new-testament') && newCompleted) {
+            reading.classList.add('completed-reading');
+          }
+        });
+      });
+    }
+
+    // Функция обновления прогресса
+    function updateProgress() {
+      const totalDays = plan.length;
+      let completedDays = 0;
+      let totalReadings = 0;
+      let completedReadings = 0;
+
+      for (let i = 1; i <= totalDays; i++) {
+        const planEntry = plan[i - 1];
+        let dayReadings = 0;
+        let dayCompleted = 0;
+        
+        if (planEntry.old) {
+          totalReadings++;
+          dayReadings++;
+          if (getBibleProgress(`bible_day_${i}_old`)) {
+            completedReadings++;
+            dayCompleted++;
+          }
+        }
+        
+        if (planEntry.new) {
+          totalReadings++;
+          dayReadings++;
+          if (getBibleProgress(`bible_day_${i}_new`)) {
+            completedReadings++;
+            dayCompleted++;
+          }
+        }
+        
+        // День считается полностью завершенным, если прочитаны все его части
+        if (dayCompleted === dayReadings && dayReadings > 0) {
+          completedDays++;
+        }
+      }
+
+      const dayPercentage = totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0;
+      const readingPercentage = totalReadings > 0 ? Math.round((completedReadings / totalReadings) * 100) : 0;
+      
+      document.getElementById('progressFill').style.width = `${readingPercentage}%`;
+      document.getElementById('progressText').innerHTML = 
+        `Прочитано: ${completedDays} из ${totalDays} дней (${dayPercentage}%)<br>
+         <small>Отрывков: ${completedReadings} из ${totalReadings} (${readingPercentage}%)</small>`;
+    }
+
+    // Функция применения фильтра
+    function applyFilter(filter) {
+      currentFilter = filter;
+      const days = document.querySelectorAll('.day');
+      let visibleCount = 0;
+
+      days.forEach((day, index) => {
+        const dayNumber = index + 1;
+        const planEntry = plan[index];
+        
+        // Проверяем состояние чтений
+        const oldCompleted = getBibleProgress(`bible_day_${dayNumber}_old`);
+        const newCompleted = getBibleProgress(`bible_day_${dayNumber}_new`);
+        
+        const hasOldReading = planEntry.old !== null;
+        const hasNewReading = planEntry.new !== null;
+        
+        let totalParts = 0;
+        let completedParts = 0;
+        
+        if (hasOldReading) {
+          totalParts++;
+          if (oldCompleted) completedParts++;
+        }
+        
+        if (hasNewReading) {
+          totalParts++;
+          if (newCompleted) completedParts++;
+        }
+        
+        const isFullyCompleted = completedParts === totalParts && totalParts > 0;
+        const isPartiallyCompleted = completedParts > 0 && completedParts < totalParts;
+        const isPending = completedParts === 0;
+        
+        let shouldShow = false;
+
+        switch (filter) {
+          case 'all':
+            shouldShow = true;
+            break;
+          case 'completed':
+            shouldShow = isFullyCompleted;
+            break;
+          case 'pending':
+            shouldShow = isPending || isPartiallyCompleted;
+            break;
+        }
+
+        if (shouldShow) {
+          day.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          day.classList.add('hidden');
+        }
+      });
+
+      // Показать сообщение если нет элементов
+      const container = document.getElementById('planContainer');
+      let emptyState = container.querySelector('.empty-state');
+      
+      if (visibleCount === 0) {
+        if (!emptyState) {
+          emptyState = document.createElement('div');
+          emptyState.className = 'empty-state';
+          container.appendChild(emptyState);
+        }
+        
+        let message = '';
+        switch (filter) {
+          case 'completed':
+            message = 'Пока нет полностью прочитанных дней. Начните читать!';
+            break;
+          case 'pending':
+            message = 'Поздравляем! Все дни прочитаны полностью!';
+            break;
+          default:
+            message = 'Нет данных для отображения';
+        }
+        emptyState.textContent = message;
+        emptyState.style.display = 'block';
+      } else if (emptyState) {
+        emptyState.style.display = 'none';
+      }
+
+      // Обновить активную кнопку
+      document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
+      const activeButton = {
+        'all': 'showAll',
+        'completed': 'showCompleted',
+        'pending': 'showPending'
+      }[filter];
+      if (activeButton) {
+        document.getElementById(activeButton).classList.add('active');
+      }
+    }
+
+    // Функция обновления видимости чтений
+    function updateReadingsVisibility() {
+      document.querySelectorAll('.day').forEach(day => {
+        const oldReading = day.querySelector('.reading.old-testament');
+        const newReading = day.querySelector('.reading.new-testament');
+        
+        if (oldReading) {
+          oldReading.classList.toggle('hidden', !showOldTestament);
+        }
+        if (newReading) {
+          newReading.classList.toggle('hidden', !showNewTestament);
+        }
+        
+        // Обновляем чекбоксы
+        const checkboxWrapper = day.querySelector('.checkbox-wrapper');
+        const oldCheckbox = checkboxWrapper.querySelector('.old-checkbox');
+        const newCheckbox = checkboxWrapper.querySelector('.new-checkbox');
+        
+        if (oldCheckbox) {
+          oldCheckbox.parentElement.style.display = showOldTestament ? 'flex' : 'none';
+        }
+        if (newCheckbox) {
+          newCheckbox.parentElement.style.display = showNewTestament ? 'flex' : 'none';
+        }
+      });
+    }
+
+    // Функция сброса прогресса
+    function resetProgress() {
+      if (confirm('Вы уверены, что хотите сбросить весь прогресс?')) {
+        bibleProgress = {};
+        document.querySelectorAll('input[type="checkbox"]:not(#showOldTestament):not(#showNewTestament)').forEach(checkbox => {
+          checkbox.checked = false;
+        });
+        updateDayStatus();
+        updateProgress();
+        applyFilter(currentFilter);
+      }
+    }
+
+    // Создание интерфейса
+    const container = document.getElementById('planContainer');
+
+    plan.forEach((entry, i) => {
+      const day = i + 1;
+      const oldKey = `bible_day_${day}_old`;
+      const newKey = `bible_day_${day}_new`;
+
+      const div = document.createElement('div');
+      div.className = 'day';
+
+      const dayContent = document.createElement('div');
+      dayContent.className = 'day-content';
+
+      const checkboxWrapper = document.createElement('div');
+      checkboxWrapper.className = 'checkbox-wrapper';
+
+      // Создаем группу чекбоксов
+      const checkboxGroup = document.createElement('div');
+      checkboxGroup.className = 'checkbox-group';
+
+      // Чекбокс для Ветхого Завета
+      if (entry.old) {
+        const oldCheckboxItem = document.createElement('div');
+        oldCheckboxItem.className = 'checkbox-item';
+        
+        const oldCheckbox = document.createElement('input');
+        oldCheckbox.type = 'checkbox';
+        oldCheckbox.className = 'old-checkbox';
+        oldCheckbox.checked = getBibleProgress(oldKey);
+        oldCheckbox.addEventListener('change', () => {
+          setBibleProgress(oldKey, oldCheckbox.checked);
+        });
+
+        const oldLabel = document.createElement('span');
+        oldLabel.textContent = 'ВЗ';
+        oldLabel.style.color = '#8b5cf6';
+
+        oldCheckboxItem.appendChild(oldCheckbox);
+        oldCheckboxItem.appendChild(oldLabel);
+        checkboxGroup.appendChild(oldCheckboxItem);
+      }
+
+      // Чекбокс для Нового Завета
+      if (entry.new) {
+        const newCheckboxItem = document.createElement('div');
+        newCheckboxItem.className = 'checkbox-item';
+        
+        const newCheckbox = document.createElement('input');
+        newCheckbox.type = 'checkbox';
+        newCheckbox.className = 'new-checkbox';
+        newCheckbox.checked = getBibleProgress(newKey);
+        newCheckbox.addEventListener('change', () => {
+          setBibleProgress(newKey, newCheckbox.checked);
+        });
+
+        const newLabel = document.createElement('span');
+        newLabel.textContent = 'НЗ';
+        newLabel.style.color = '#06b6d4';
+
+        newCheckboxItem.appendChild(newCheckbox);
+        newCheckboxItem.appendChild(newLabel);
+        checkboxGroup.appendChild(newCheckboxItem);
+      }
+
+      checkboxWrapper.appendChild(checkboxGroup);
+
+      const dayInfo = document.createElement('div');
+      dayInfo.className = 'day-info';
+
+      const dayNumber = document.createElement('div');
+      dayNumber.className = 'day-number';
+      dayNumber.textContent = `День ${day}`;
+
+      const readings = document.createElement('div');
+      readings.className = 'readings';
+
+      if (entry.old) {
+        const oldReading = document.createElement('div');
+        oldReading.className = 'reading old-testament';
+        oldReading.textContent = `Ветхий Завет: ${entry.old}`;
+        readings.appendChild(oldReading);
+      }
+
+      if (entry.new) {
+        const newReading = document.createElement('div');
+        newReading.className = 'reading new-testament';
+        newReading.textContent = `Новый Завет: ${entry.new}`;
+        readings.appendChild(newReading);
+      }
+
+      dayInfo.appendChild(dayNumber);
+      dayInfo.appendChild(readings);
+
+      dayContent.appendChild(checkboxWrapper);
+      dayContent.appendChild(dayInfo);
+      div.appendChild(dayContent);
+      container.appendChild(div);
     });
-  }
 
-  const container = document.getElementById("plan-container");
+    // Обработчики событий для кнопок
+    document.getElementById('showAll').addEventListener('click', () => applyFilter('all'));
+    document.getElementById('showCompleted').addEventListener('click', () => applyFilter('completed'));
+    document.getElementById('showPending').addEventListener('click', () => applyFilter('pending'));
+    document.getElementById('resetProgress').addEventListener('click', resetProgress);
 
-  plan.forEach((entry, i) => {
-    const day = i + 1;
-    const key = `bible_day_${day}`;
-    const isChecked = localStorage.getItem(key) === 'true';
-
-    const div = document.createElement("div");
-    div.className = "day";
-
-    const label = document.createElement("label");
-    label.className = isChecked ? "done" : "";
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = isChecked;
-    checkbox.addEventListener("change", () => {
-      localStorage.setItem(key, checkbox.checked);
-      label.className = checkbox.checked ? "done" : "";
+    // Обработчики для переключения Заветов
+    document.getElementById('showOldTestament').addEventListener('change', (e) => {
+      showOldTestament = e.target.checked;
+      document.getElementById('oldTestamentToggle').classList.toggle('active', showOldTestament);
+      updateReadingsVisibility();
     });
 
-    label.appendChild(checkbox);
+    document.getElementById('showNewTestament').addEventListener('change', (e) => {
+      showNewTestament = e.target.checked;
+      document.getElementById('newTestamentToggle').classList.toggle('active', showNewTestament);
+      updateReadingsVisibility();
+    });
 
-    let text = `День ${day}:`;
-    if (entry.old) text += ` Ветхий Завет — ${entry.old}`;
-    if (entry.old && entry.new) text += `   ||   `;
-    if (entry.new) text += ` Новый Завет — ${entry.new}`;
-
-    label.appendChild(document.createTextNode(text));
-    div.appendChild(label);
-    container.appendChild(div);
-  });
+    // Инициализация
+    updateDayStatus();
+    updateProgress();
+    updateReadingsVisibility();
+    applyFilter('all');
   </script>
-
 </body>
 </html>
