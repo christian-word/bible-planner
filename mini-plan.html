@@ -76,6 +76,38 @@
       color: #64748b;
       font-size: 0.95rem;
       font-weight: 500;
+      margin-bottom: 15px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: white;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn.active {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      border-color: #4facfe;
     }
 
     .plan-container {
@@ -119,6 +151,15 @@
     .day.completed {
       background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
       border-color: #4facfe;
+    }
+
+    .day.missed {
+      background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+      border-color: #fdcb6e;
+    }
+
+    .day.hidden {
+      display: none;
     }
 
     .day-content {
@@ -202,6 +243,13 @@
       text-decoration: line-through;
     }
 
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #64748b;
+      font-style: italic;
+    }
+
     @media (max-width: 768px) {
       body {
         padding: 10px;
@@ -245,6 +293,15 @@
         font-size: 0.9rem;
         padding: 5px 10px;
       }
+
+      .controls {
+        gap: 8px;
+      }
+
+      .btn {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -282,6 +339,12 @@
       <div class="progress-text" id="progressText">
         Прочитано: 0 из 0 дней (0%)
       </div>
+      <div class="controls">
+        <button class="btn active" id="showAll">Все дни</button>
+        <button class="btn" id="showCompleted">Прочитанные</button>
+        <button class="btn" id="showPending">Непрочитанные</button>
+        <button class="btn" id="resetProgress">Сбросить прогресс</button>
+      </div>
     </div>
 
     <div class="plan-container" id="planContainer">
@@ -291,7 +354,6 @@
  
 <script src="oldTestament.js"></script>
 <script src="newTestament.js"></script>
-
   <script>
     // Создание плана
     const maxDays = Math.max(oldTestament.length, newTestament.length);
@@ -302,6 +364,21 @@
         old: oldTestament[i] || null,
         new: newTestament[i] || null
       });
+    }
+
+    // Состояние приложения
+    let bibleProgress = {};
+    let currentFilter = 'all';
+
+    // Функции для работы с прогрессом
+    function setBibleProgress(key, value) {
+      bibleProgress[key] = value;
+      updateProgress();
+      applyFilter(currentFilter);
+    }
+
+    function getBibleProgress(key) {
+      return bibleProgress[key] === true;
     }
 
     // Функция обновления прогресса
@@ -315,22 +392,97 @@
         }
       }
 
-      const percentage = Math.round((completedDays / totalDays) * 100);
+      const percentage = totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0;
       
       document.getElementById('progressFill').style.width = `${percentage}%`;
       document.getElementById('progressText').textContent = 
         `Прочитано: ${completedDays} из ${totalDays} дней (${percentage}%)`;
     }
 
-    // Функции для работы с прогрессом (замена localStorage)
-    let bibleProgress = {};
+    // Функция применения фильтра
+    function applyFilter(filter) {
+      currentFilter = filter;
+      const days = document.querySelectorAll('.day');
+      let visibleCount = 0;
 
-    function setBibleProgress(key, value) {
-      bibleProgress[key] = value;
+      days.forEach((day, index) => {
+        const dayNumber = index + 1;
+        const isCompleted = getBibleProgress(`bible_day_${dayNumber}`);
+        let shouldShow = false;
+
+        switch (filter) {
+          case 'all':
+            shouldShow = true;
+            break;
+          case 'completed':
+            shouldShow = isCompleted;
+            break;
+          case 'pending':
+            shouldShow = !isCompleted;
+            break;
+        }
+
+        if (shouldShow) {
+          day.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          day.classList.add('hidden');
+        }
+      });
+
+      // Показать сообщение если нет элементов
+      const container = document.getElementById('planContainer');
+      let emptyState = container.querySelector('.empty-state');
+      
+      if (visibleCount === 0) {
+        if (!emptyState) {
+          emptyState = document.createElement('div');
+          emptyState.className = 'empty-state';
+          container.appendChild(emptyState);
+        }
+        
+        let message = '';
+        switch (filter) {
+          case 'completed':
+            message = 'Пока нет прочитанных дней. Начните читать!';
+            break;
+          case 'pending':
+            message = 'Поздравляем! Все дни прочитаны!';
+            break;
+          default:
+            message = 'Нет данных для отображения';
+        }
+        emptyState.textContent = message;
+        emptyState.style.display = 'block';
+      } else if (emptyState) {
+        emptyState.style.display = 'none';
+      }
+
+      // Обновить активную кнопку
+      document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
+      const activeButton = {
+        'all': 'showAll',
+        'completed': 'showCompleted',
+        'pending': 'showPending'
+      }[filter];
+      if (activeButton) {
+        document.getElementById(activeButton).classList.add('active');
+      }
     }
 
-    function getBibleProgress(key) {
-      return bibleProgress[key] === 'true';
+    // Функция сброса прогресса
+    function resetProgress() {
+      if (confirm('Вы уверены, что хотите сбросить весь прогресс?')) {
+        bibleProgress = {};
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+          checkbox.checked = false;
+        });
+        document.querySelectorAll('.day').forEach(day => {
+          day.classList.remove('completed');
+        });
+        updateProgress();
+        applyFilter(currentFilter);
+      }
     }
 
     // Создание интерфейса
@@ -356,7 +508,6 @@
       checkbox.addEventListener('change', () => {
         setBibleProgress(key, checkbox.checked);
         div.className = `day ${checkbox.checked ? 'completed' : ''}`;
-        updateProgress();
       });
 
       checkboxWrapper.appendChild(checkbox);
@@ -394,8 +545,15 @@
       container.appendChild(div);
     });
 
-    // Инициализация прогресса
+    // Обработчики событий для кнопок
+    document.getElementById('showAll').addEventListener('click', () => applyFilter('all'));
+    document.getElementById('showCompleted').addEventListener('click', () => applyFilter('completed'));
+    document.getElementById('showPending').addEventListener('click', () => applyFilter('pending'));
+    document.getElementById('resetProgress').addEventListener('click', resetProgress);
+
+    // Инициализация
     updateProgress();
+    applyFilter('all');
   </script>
 </body>
 </html>
